@@ -4,6 +4,8 @@ Option _Explicit
 
 type TBMFont
   face as string
+  filename as string
+  lineHeight as integer
 end type
 
 Const cornflowerBlue = &HFF6495ED
@@ -39,20 +41,41 @@ do while not EOF(1)
         font.face = replaceAll(v, chr$(34), "")
     next
 
+  elseif startsWith(txtLine, "page") then
+    split txtLine, " ", pairs()
+
+    for a=0 to ubound(pairs)
+      print i32str(a) + ": " + pairs(a)
+
+      split pairs(a), "=", pair()
+      k = pair(0): v = pair(1)
+      if k = "file" then _
+        font.filename = replaceAll(v, chr$(34), "")
+    next
+
     ' print txtLine
-  elseif startsWith(txtLine, "char") then
-    if not startsWith(txtLine, "chars") then
-      do while contains(txtLine, "  ")
-        txtLine = replaceAll(txtLine, "  ", " ")
-      loop
-      ' print txtLine
-    end if
+  elseif startsWith(txtLine, "char") and not startsWith(txtLine, "chars") then
+    do while contains(txtLine, "  ")
+      txtLine = replaceAll(txtLine, "  ", " ")
+    loop
+    ' print txtLine
+
+    split txtLine, " ", pairs()
+
+    for a=0 to ubound(pairs)
+      print i32str(a) + ": " + pairs(a)
+
+      split pairs(a), "=", pair()
+      k = pair(0): v = pair(1)
+      ' TODO: Parse the whole line first, then copy the record/UDT to the font glyphs
+    next
   end if
 loop
 
 close #1
 
 print "Font face: " + font.face
+print "Filename: " + font.filename
 
 input "", dump
 
