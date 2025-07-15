@@ -4,8 +4,8 @@ Option _Explicit
 
 type TBMFontGlyph
   as integer id, x, y
-  as integer width, height, xoffset, yoffset
-  as integer xadvance, page, chnl
+  as integer width, height, xoffset, yoffset, xadvance
+  ' as integer page, chnl
 end type
 
 type TBMFont
@@ -22,7 +22,7 @@ dim fontGlyphs(32 to 126) as TBMFontGlyph
 dim tempGlyph as TBMFontGlyph
 
 
-' TODO: Try to read the BMFont file
+' Attempt to read the BMFont file
 if not _fileexists("FONTS\P8.TXT") then
   print "Error: Couldn't open file!"
   end
@@ -69,6 +69,7 @@ do while not EOF(1)
     loop
     ' print txtLine
 
+    ' Parse the whole line first, then copy the record/UDT to the list of font glyphs
     split txtLine, " ", pairs()
 
     for a=0 to ubound(pairs)
@@ -78,8 +79,14 @@ do while not EOF(1)
       k = pair(0): v = pair(1)
       if k = "id" then
         tempGlyph.id = parseInt(v)
+      elseif k = "x" then tempGlyph.x = parseInt(v)
+      elseif k = "y" then tempGlyph.y = parseInt(v)
+      elseif k = "width" then tempGlyph.width = parseInt(v)
+      elseif k = "height" then tempGlyph.height = parseInt(v)
+      elseif k = "xoffset" then tempGlyph.xoffset = parseInt(v)
+      elseif k = "yoffset" then tempGlyph.yoffset = parseInt(v)
+      elseif k = "xadvance" then tempGlyph.xadvance = parseInt(v)
       end if
-      ' TODO: Parse the whole line first, then copy the record/UDT to the font glyphs
     next
 
     fontGlyphs(tempGlyph.id) = tempGlyph
@@ -90,6 +97,7 @@ close #1
 
 print "Font face: " + font.face
 print "Filename: " + font.filename
+print "id 32 x: " + i32str(fontGlyphs(32).x)
 
 input "", dump
 
