@@ -12,6 +12,7 @@ type TBMFont
   face as string
   filename as string
   lineHeight as integer
+  imgHandle as long  ' TODO: Load the image
 end type
 
 Const cornflowerBlue = &HFF6495ED
@@ -23,6 +24,10 @@ dim tempGlyph as TBMFontGlyph
 
 
 ' Attempt to read the BMFont file
+' TODO: Upgrade this to a sub: loadBMFont
+' TODO: Add the freeBMFont counterpart
+' TODO: Add the printBMFont sub
+' TODO: Add measureBMFont sub
 if not _fileexists("FONTS\P8.TXT") then
   print "Error: Couldn't open file!"
   end
@@ -89,7 +94,8 @@ do while not EOF(1)
       end if
     next
 
-    fontGlyphs(tempGlyph.id) = tempGlyph
+    if lbound(fontGlyphs) <= tempGlyph.id and tempGlyph.id <= ubound(fontGlyphs) then _
+      fontGlyphs(tempGlyph.id) = tempGlyph
   end if
 loop
 
