@@ -2,6 +2,12 @@ Option _Explicit
 '$Include: 'INCLUDES\VGA.BI'
 '$include: 'INCLUDES\CONV.BI'
 
+type TBMFontGlyph
+  as integer id, x, y
+  as integer width, height, xoffset, yoffset
+  as integer xadvance, page, chnl
+end type
+
 type TBMFont
   face as string
   filename as string
@@ -10,7 +16,10 @@ end type
 
 Const cornflowerBlue = &HFF6495ED
 Dim dump As String
+
 dim font as TBMFont
+dim fontGlyphs(32 to 126) as TBMFontGlyph
+dim tempGlyph as TBMFontGlyph
 
 
 ' TODO: Try to read the BMFont file
@@ -67,8 +76,13 @@ do while not EOF(1)
 
       split pairs(a), "=", pair()
       k = pair(0): v = pair(1)
+      if k = "id" then
+        tempGlyph.id = parseInt(v)
+      end if
       ' TODO: Parse the whole line first, then copy the record/UDT to the font glyphs
     next
+
+    fontGlyphs(tempGlyph.id) = tempGlyph
   end if
 loop
 
