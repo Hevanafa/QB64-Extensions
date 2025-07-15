@@ -1,5 +1,6 @@
 Option _Explicit
 '$Include: 'INCLUDES\VGA.BI'
+'$include: 'INCLUDES\CONV.BI'
 
 type TBMFont
   face as string
@@ -19,23 +20,39 @@ end if
 open "FONTS\P8.TXT" for input as #1
 
 dim txtLine as string
+dim as integer a
+dim as string pairs(0 to 9)
+dim as string pair(0 to 1)
+dim as string k, v
 do while not EOF(1)
   line input #1, txtLine
   
   if startsWith(txtLine, "info") then
-    print ""
+    split txtLine, " ", pairs()
+
+    for a=0 to ubound(pairs)
+      print i32str(a) + ": " + pairs(a)
+
+      split pairs(a), "=", pair()
+      k = pair(0): v = pair(1)
+      if k = "face" then _
+        font.face = replaceAll(v, chr$(34), "")
+    next
+
     ' print txtLine
   elseif startsWith(txtLine, "char") then
     if not startsWith(txtLine, "chars") then
       do while contains(txtLine, "  ")
         txtLine = replaceAll(txtLine, "  ", " ")
       loop
-      print txtLine
+      ' print txtLine
     end if
   end if
 loop
 
 close #1
+
+print "Font face: " + font.face
 
 input "", dump
 
@@ -61,5 +78,6 @@ Input "asdf", dump
 system
 
 
+'$include: 'INCLUDES\CONV.BM'
 '$Include: 'INCLUDES\VGA.BM'
 '$Include: 'INCLUDES\STRINGS.BM'
