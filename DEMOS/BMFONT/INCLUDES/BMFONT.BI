@@ -1,3 +1,5 @@
+$IncludeOnce
+
 type TBMFontGlyph
   as integer id, x, y
   as integer width, height, xoffset, yoffset, xadvance
