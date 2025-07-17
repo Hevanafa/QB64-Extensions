@@ -20,7 +20,6 @@ Dim dump As String
 
 dim font as TBMFont
 dim fontGlyphs(32 to 126) as TBMFontGlyph
-dim tempGlyph as TBMFontGlyph
 
 
 ' Attempt to read the BMFont file
@@ -28,78 +27,7 @@ dim tempGlyph as TBMFontGlyph
 ' TODO: Add the freeBMFont counterpart
 ' TODO: Add the printBMFont sub
 ' TODO: Add measureBMFont sub
-if not _fileexists("FONTS\P8.TXT") then
-  print "Error: Couldn't open file!"
-  end
-end if
-
-open "FONTS\P8.TXT" for input as #1
-
-dim txtLine as string
-dim as integer a
-dim as string pairs(0 to 9)
-dim as string pair(0 to 1)
-dim as string k, v
-do while not EOF(1)
-  line input #1, txtLine
-  
-  if startsWith(txtLine, "info") then
-    split txtLine, " ", pairs()
-
-    for a=0 to ubound(pairs)
-      print i32str(a) + ": " + pairs(a)
-
-      split pairs(a), "=", pair()
-      k = pair(0): v = pair(1)
-      if k = "face" then _
-        font.face = replaceAll(v, chr$(34), "")
-    next
-
-  elseif startsWith(txtLine, "page") then
-    split txtLine, " ", pairs()
-
-    for a=0 to ubound(pairs)
-      print i32str(a) + ": " + pairs(a)
-
-      split pairs(a), "=", pair()
-      k = pair(0): v = pair(1)
-      if k = "file" then _
-        font.filename = replaceAll(v, chr$(34), "")
-    next
-
-    ' print txtLine
-  elseif startsWith(txtLine, "char") and not startsWith(txtLine, "chars") then
-    do while contains(txtLine, "  ")
-      txtLine = replaceAll(txtLine, "  ", " ")
-    loop
-    ' print txtLine
-
-    ' Parse the whole line first, then copy the record/UDT to the list of font glyphs
-    split txtLine, " ", pairs()
-
-    for a=0 to ubound(pairs)
-      print i32str(a) + ": " + pairs(a)
-
-      split pairs(a), "=", pair()
-      k = pair(0): v = pair(1)
-      if k = "id" then
-        tempGlyph.id = parseInt(v)
-      elseif k = "x" then tempGlyph.x = parseInt(v)
-      elseif k = "y" then tempGlyph.y = parseInt(v)
-      elseif k = "width" then tempGlyph.width = parseInt(v)
-      elseif k = "height" then tempGlyph.height = parseInt(v)
-      elseif k = "xoffset" then tempGlyph.xoffset = parseInt(v)
-      elseif k = "yoffset" then tempGlyph.yoffset = parseInt(v)
-      elseif k = "xadvance" then tempGlyph.xadvance = parseInt(v)
-      end if
-    next
-
-    if lbound(fontGlyphs) <= tempGlyph.id and tempGlyph.id <= ubound(fontGlyphs) then _
-      fontGlyphs(tempGlyph.id) = tempGlyph
-  end if
-loop
-
-close #1
+loadBMFont font, fontGlyphs(), "FONTS\P8.TXT"
 
 print "Font face: " + font.face
 print "Filename: " + font.filename
@@ -129,6 +57,84 @@ Input "asdf", dump
 system
 
 
+' implementation
 '$include: 'INCLUDES\CONV.BM'
 '$Include: 'INCLUDES\VGA.BM'
 '$Include: 'INCLUDES\STRINGS.BM'
+
+sub loadBMFont(font as TBMFont, fontGlyphs() as TBMFontGlyph, filename as string)
+  if not _fileexists(filename) then
+    print "Error: Couldn't open file!"
+    end
+  end if
+
+  dim as string  txtLine
+  dim as integer a
+  dim as string  pairs(0 to 9)
+  dim as string  pair(0 to 1)
+  dim as string  k, v
+  dim as TBMFontGlyph tempGlyph
+
+  open filename for input as #1
+
+  do while not EOF(1)
+    line input #1, txtLine
+    
+    if startsWith(txtLine, "info") then
+      split txtLine, " ", pairs()
+
+      for a=0 to ubound(pairs)
+        print i32str(a) + ": " + pairs(a)
+
+        split pairs(a), "=", pair()
+        k = pair(0): v = pair(1)
+        if k = "face" then _
+          font.face = replaceAll(v, chr$(34), "")
+      next
+
+    elseif startsWith(txtLine, "page") then
+      split txtLine, " ", pairs()
+
+      for a=0 to ubound(pairs)
+        print i32str(a) + ": " + pairs(a)
+
+        split pairs(a), "=", pair()
+        k = pair(0): v = pair(1)
+        if k = "file" then _
+          font.filename = replaceAll(v, chr$(34), "")
+      next
+
+      ' print txtLine
+    elseif startsWith(txtLine, "char") and not startsWith(txtLine, "chars") then
+      do while contains(txtLine, "  ")
+        txtLine = replaceAll(txtLine, "  ", " ")
+      loop
+      ' print txtLine
+
+      ' Parse the whole line first, then copy the record/UDT to the list of font glyphs
+      split txtLine, " ", pairs()
+
+      for a=0 to ubound(pairs)
+        print i32str(a) + ": " + pairs(a)
+
+        split pairs(a), "=", pair()
+        k = pair(0): v = pair(1)
+        if k = "id" then
+          tempGlyph.id = parseInt(v)
+        elseif k = "x" then tempGlyph.x = parseInt(v)
+        elseif k = "y" then tempGlyph.y = parseInt(v)
+        elseif k = "width" then tempGlyph.width = parseInt(v)
+        elseif k = "height" then tempGlyph.height = parseInt(v)
+        elseif k = "xoffset" then tempGlyph.xoffset = parseInt(v)
+        elseif k = "yoffset" then tempGlyph.yoffset = parseInt(v)
+        elseif k = "xadvance" then tempGlyph.xadvance = parseInt(v)
+        end if
+      next
+
+      if lbound(fontGlyphs) <= tempGlyph.id and tempGlyph.id <= ubound(fontGlyphs) then _
+        fontGlyphs(tempGlyph.id) = tempGlyph
+    end if
+  loop
+
+  close #1
+end sub
