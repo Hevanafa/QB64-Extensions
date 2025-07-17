@@ -93,4 +93,23 @@ sub freeBMFont(font as TBMFont, fontGlyphs() as TBMFontGlyph)
   next
 end sub
 
+sub printBMFont(text as string, x as integer, y as integer, font as TBMFont, fontGlyphs() as TBMFontGlyph)
+  if not isImageSet(font.imgHandle) then exit sub
+
+  dim ch as string
+  dim a, charcode, left as integer
+
+  for a=1 to len(text)
+    ch = mid$(text, a, 1)
+    charcode = asc(ch)
+    if charcode < lbound(fontGlyphs) or charcode > ubound(fontGlyphs) then
+
+    else
+      sprRegion font.imgHandle, fontGlyphs(charcode).x, fontGlyphs(charcode).y, fontGlyphs(charcode).width, fontGlyphs(charcode).height, x + left, y
+      left = left + fontGlyphs(charcode).xadvance
+    end if
+  next
+end sub
+
+
 '$include: 'BITMAP.BM'
