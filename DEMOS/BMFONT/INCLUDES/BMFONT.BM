@@ -105,7 +105,7 @@ sub printBMFont(text as string, x as integer, y as integer, font as TBMFont, fon
     if charcode < lbound(fontGlyphs) or charcode > ubound(fontGlyphs) then
 
     else
-      sprRegion font.imgHandle, fontGlyphs(charcode).x, fontGlyphs(charcode).y, fontGlyphs(charcode).width, fontGlyphs(charcode).height, x + left, y
+      sprRegion font.imgHandle, fontGlyphs(charcode).x, fontGlyphs(charcode).y, fontGlyphs(charcode).width, fontGlyphs(charcode).height, x + left + fontGlyphs(charcode).xoffset, y + fontGlyphs(charcode).yoffset
       left = left + fontGlyphs(charcode).xadvance
     end if
   next

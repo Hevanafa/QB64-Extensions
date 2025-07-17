@@ -14,7 +14,8 @@ redim as TBMFontGlyph fontGlyphs(32 to 126)
 ' DONE: Upgrade this to a sub: loadBMFont
 ' DONE: Add the freeBMFont counterpart
 ' DONE: Add the printBMFont sub
-' TODO: Add measureBMFont sub
+' DONE: Add measureBMFont sub
+' DONE: Apply char offset adjustment
 loadBMFont font, fontGlyphs(), "FONTS\P8.TXT"
 
 ' print "Font face: " + font.face
