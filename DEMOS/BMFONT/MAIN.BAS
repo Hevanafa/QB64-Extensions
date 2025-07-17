@@ -36,6 +36,8 @@ print "id 32 x: " + i32str(fontGlyphs(32).x)
 
 input "", dump
 
+freeBMFont font, fontGlyphs()
+
 end
 
 
@@ -142,5 +144,19 @@ sub loadBMFont(font as TBMFont, fontGlyphs() as TBMFontGlyph, filename as string
   if isImageSet(font.imgHandle) then freeImage font.imgHandle
   loadImage font.imgHandle, font.filename
 end sub
+
+
+sub freeBMFont(font as TBMFont, fontGlyphs() as TBMFontGlyph)
+  dim a as integer
+  dim tempFont as TBMFont
+  dim temp as TBMFontGlyph
+
+  freeImage font.imgHandle
+  font = tempFont
+  for a=lbound(fontGlyphs) to ubound(fontGlyphs)
+    fontGlyphs(a) = temp
+  next
+end sub
+
 
 '$include: 'INCLUDES\BITMAP.BM'
