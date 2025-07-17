@@ -2,6 +2,7 @@ Option _Explicit
 '$Include: 'INCLUDES\VGA.BI'
 '$include: 'INCLUDES\CONV.BI'
 
+
 type TBMFontGlyph
   as integer id, x, y
   as integer width, height, xoffset, yoffset, xadvance
@@ -12,7 +13,7 @@ type TBMFont
   face as string
   filename as string
   lineHeight as integer
-  imgHandle as long  ' TODO: Load the image
+  imgHandle as long
 end type
 
 Const cornflowerBlue = &HFF6495ED
@@ -23,7 +24,7 @@ dim fontGlyphs(32 to 126) as TBMFontGlyph
 
 
 ' Attempt to read the BMFont file
-' TODO: Upgrade this to a sub: loadBMFont
+' DONE: Upgrade this to a sub: loadBMFont
 ' TODO: Add the freeBMFont counterpart
 ' TODO: Add the printBMFont sub
 ' TODO: Add measureBMFont sub
@@ -137,4 +138,9 @@ sub loadBMFont(font as TBMFont, fontGlyphs() as TBMFontGlyph, filename as string
   loop
 
   close #1
+
+  if isImageSet(font.imgHandle) then freeImage font.imgHandle
+  loadImage font.imgHandle, font.filename
 end sub
+
+'$include: 'INCLUDES\BITMAP.BM'
