@@ -30,7 +30,12 @@ Cls , cornflowerBlue
 
 ' color &hFFFFFFFF
 ' _PrintString (10, 10), "This is Font 8"
-printBMFont "hello pico-8 and qb64!", 10, 10, font, fontGlyphs()
+dim w as integer
+dim s as string
+s = "hello pico-8 and qb64!"
+w = measureBMFont(s, font, fontGlyphs())
+printBMFont s, 10, 10, font, fontGlyphs()
+printBMFont "length: " + i32str(w), 10, 20, font, fontGlyphs()
 
 ' Flush
 _PutImage , surface, scaled

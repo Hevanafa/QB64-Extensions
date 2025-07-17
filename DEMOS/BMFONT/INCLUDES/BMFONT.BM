@@ -111,5 +111,23 @@ sub printBMFont(text as string, x as integer, y as integer, font as TBMFont, fon
   next
 end sub
 
+function measureBMFont%(text as string, font as TBMFont, fontGlyphs() as TBMFontGlyph)
+  dim a, result, charcode as integer
+  dim ch as string
+  result = 0
+
+  for a=1 to len(text)
+    ch = mid$(text, a, 1)
+    charcode = asc(ch)
+    
+    if charcode < lbound(fontGlyphs) or charcode > ubound(fontGlyphs) then
+    else
+      result = result + fontGlyphs(charcode).xadvance
+    end if
+  next
+
+  measureBMFont% = result
+end function
+
 
 '$include: 'BITMAP.BM'
