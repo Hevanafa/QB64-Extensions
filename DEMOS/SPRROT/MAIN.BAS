@@ -15,10 +15,17 @@ dim as double angle
 initBuffer
 loadImage imgGasolineMaid, "gasoline_maid.png"
 
+_font 8
+_printMode _keepBackground
+
 do
+  ' Update
   _limit 60
   angle=angle+0.03
 
+  if inkey$ = chr$(27) then done = true
+
+  ' Draw
   cls , cornflowerBlue&
 
   ' spr imgGasolineMaid, 0, 0
@@ -31,6 +38,9 @@ do
   _MapTriangle (w-1, 0)-(0, h-1)-(w-1, h-1), imgGasolineMaid to (w-1, 0)-(0, h-1)-(w-1, h-1)
 
   sprRotate imgGasolineMaid, 160, 100, angle
+
+  color &hFFFFFFFF
+  _printString (0, 0), "Rotation:" + str$(angle)
 
   _putimage, surface, scaled
   _display
@@ -74,7 +84,9 @@ sub sprRotate(imgHandle as long, cx as integer, cy as integer, rotation as doubl
   x4 = cx + (halfW * cosTheta - halfH * sinTheta)
   y4 = cy + (halfW * sinTheta + halfH * cosTheta)
 
+  ' Top left
   _MapTriangle (0, 0)-(w-1, 0)-(0, h-1), imgHandle to (x1, y1)-(x2, y2)-(x3, y3)
+  ' Bottom right
   _MapTriangle (w-1, 0)-(0, h-1)-(w-1, h-1), imgHandle to (x2, y2)-(x3, y3)-(x4, y4)
 end sub
 
