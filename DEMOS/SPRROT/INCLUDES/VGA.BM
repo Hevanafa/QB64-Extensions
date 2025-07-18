@@ -16,3 +16,7 @@ Sub initBuffer
   scaled = _NewImage(640, 400, 32)
   Screen scaled: _Dest surface: _Delay 0.1: _Display
 End Sub
+
+sub initTextMode
+  screen 0
+end sub
